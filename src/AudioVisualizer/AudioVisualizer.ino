@@ -25,9 +25,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * !!! WICHTIG !!!
  * Die GNU General Public License (GNU GPL) verpflichtet den Nutzer dazu, bei Weiterverbreitung der Software
- * in ihrer ursprÃ¼nglichen oder verÃ¤nderten Form (sog. abgeleitete Werke), diese ebenfalls unter die Bedingungen der GPL zu stellen (Copyleft).
- * HÃ¤lt sich der Lizenznehmer nicht an die Bedingungen, erlischt die Befugnis zur freien Benutzung rÃ¼ckwirkend!
- * Daher ist der Verwender gehalten, ebenfalls den Quellcode zugÃ¤nglich zu machen und die abgeleitete Software wiederum der GPL zu unterwerfen.
+ * in ihrer ursprünglichen oder veränderten Form (sog. abgeleitete Werke), diese ebenfalls unter die Bedingungen der GPL zu stellen (Copyleft).
+ * Hält sich der Lizenznehmer nicht an die Bedingungen, erlischt die Befugnis zur freien Benutzung rückwirkend!
+ * Daher ist der Verwender gehalten, ebenfalls den Quellcode zugänglich zu machen und die abgeleitete Software wiederum der GPL zu unterwerfen.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
  * Special thanks to Bodmer <https://github.com/Bodmer> for the AA drawing routines and the rainbow colors!
@@ -53,7 +53,7 @@
  // USER CONFIG SECTION (please only edit here!)                                                 //
  //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define VERSION "v2.0.0, 14.08.2021"
+#define VERSION "v2.0.1, 27.08.2021"
 #define SHOWLOGO                true  // show logo
 #define BUTTON                     0  // PIN0
 #define IR                         4  // PIN4
@@ -76,7 +76,7 @@
 #include <Wire.h>
 #include <Audio.h>
 #include "SPI.h"
-#include <ILI9341Driver.h>
+#include "ILI9341Driver.h"
 #include <tgx.h> 
 #include <EEPROM.h>
 #include <OneButton.h>
@@ -93,7 +93,6 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 /// <summary>
 /// inherit from the 'AudioControlSGTL5000' class to modify the CHIP_ANA_ADC_CTRL register
 /// </summary>
@@ -103,17 +102,17 @@ public:
     void attGAIN(uint8_t att) { modify(0x0020, (att & 1) << 8, 1 << 8); }
 };
 
-// namespace for draw primitives
+// namespace for draw graphics primitives
 using namespace tgx;
 
 // framebuffers
-DMAMEM uint16_t internalBuffer[240 * 320]; // used for internal buffering
-DMAMEM uint16_t frontBuffer[240 * 320];    // paint in this buffer
-DMAMEM uint16_t backBuffer[240 * 320];     // background buffer
+DMAMEM uint16_t internalBuffer[240 * 320] = { 0 }; // used for internal buffering
+DMAMEM uint16_t frontBuffer[240 * 320] = { 0 };    // paint in this buffer
+DMAMEM uint16_t backBuffer[240 * 320] = { 0 };     // background buffer
 
 // samplebuffers
-/*DMAMEM*/ int16_t samplesLeft[2048];
-/*DMAMEM*/ int16_t samplesRight[2048];
+int16_t samplesLeft[2048] = { 0 };
+int16_t samplesRight[2048] = { 0 };
 
 // the screen driver object
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
